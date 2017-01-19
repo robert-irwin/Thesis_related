@@ -1,0 +1,73 @@
+#include    <avr/io.h>
+#include    <stdlib.h>
+#include    <avr/interrupt.h>
+#include    <util/delay.h>
+#include    "AtMega328P_UART.h"
+#include    <string.h>
+// Define Constants for USART
+//
+#define BAUD 76800
+#define MYUBRR F_OSC/16/BAUD-1
+#define CH0 0
+#define CH1 1
+#define CH2 2
+#define CH3 3
+
+int main (void)
+{
+    // *** Configure the UART (for testing) ***
+    //
+    USART328P_Init(MYUBRR);
+
+    // *** Configure the ADC ***
+    //
+
+    // Enable a prescaler (determined by 16MHz clock)
+    //
+    ADCSRA |= 7 << ADPS0; // 125kHz
+
+    // Turn on the ADC
+    //
+    ADCSRA |= 1 << ADEN;
+
+    // Enable Global Interrupts
+    //
+    sei();
+
+    // configure reference voltage for ADC (internal reference)
+    //
+    ADMUX |= 1 << REFS0;
+
+    // Enable interrupts in ADC
+    //
+    ADCSRA |= 1 << ADIE;
+
+    // Start the first conversion
+    //
+    _delay_ms(5000);
+    ADCSRA |= 1 << ADSC;
+
+    while(1)
+    {
+    }
+
+    return 0;
+}
+
+// define the interrupt service routine
+//
+
+ISR(ADC_vect)
+{
+	static int flag = 0;
+
+// Only read every other sample on each channel to allow time for transmission
+   //
+   if (flag == 3)
+   {
+	flag = 0;
+	     USART328P_Transmit(&ADCL,1);
+		USART328P_Transmit(&ADCH, 1);
+		}
+		else flag++;
+}
