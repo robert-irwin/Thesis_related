@@ -1,0 +1,35 @@
+In eclipse, File->New->C project.
+   In Project Type:
+      Executable->Empty Project
+   In Toolchains:
+      MinGW GCC
+   Hit Finish
+
+You will need two of my libraries.
+    CircularBuff and MatOps
+
+    Clone my github repo:
+       git clone https://github.com/robert-irwin/MyCLibraries.git
+    To include the source code and libraries:
+       Right click on the project in Eclipse
+       Properties->C/C++ General->Paths and Symbols->Includes->Languages->GNU C->Add...
+           Path-to-MyCLibraries\MatrixOps\MatrixOps
+	   Path-toMyCLibraries\CircularBuff\CircularBuff
+       Now under Source Location tab:
+       	   Link Folder->Link to folder in file system:
+	   	Path-to-MyCLibraries\MatrixOps\src
+		Path-to-MyCLibraries\CircularBuff\src
+
+Link the socket library on windows
+     Right click on the project in Eclipse:
+         Properties->C/C++ Build->Settings->MinGW C Linker->Miscellaneous
+	     In Other Objects Box put "D:\Programmierung\mingw\lib\libwsock32.a" (with quotes)
+
+Last step
+     Right click on project:
+         New->source folder (name it src)
+	 Right click on the src folder:
+	     new->source file (main.c)
+	     copy and paste whichever version of the code you want
+           
+    
